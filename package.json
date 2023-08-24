@@ -13,7 +13,7 @@
     "@coral-xyz/anchor": "^0.28.1-beta.1",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.3",
-    "@openbook-dex/openbook-v2": "0.0.5"
+    "@openbook-dex/openbook-v2": "file:../openbook-v2"
   },
   "devDependencies": {
     "@types/node": "^20.5.0",

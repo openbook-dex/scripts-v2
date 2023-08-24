@@ -9,6 +9,7 @@ import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { OpenBookV2Client } from "@openbook-dex/openbook-v2";
 import { RPC, authority, programId } from "./utils";
 
+const createIndexer = true;
 async function main() {
   const wallet = new Wallet(authority);
   const provider = new AnchorProvider(new Connection(RPC), wallet, {
@@ -16,11 +17,12 @@ async function main() {
   });
   const client = new OpenBookV2Client(programId, provider);
 
-  const market = new PublicKey("6VPvuktraw1AfHcUAtsfTnouUt8Epa1bfbwTRk6PmqWk");
-  const accountIndex = new BN(3);
+  const market = new PublicKey("CwHc9CZ9UCZFayz4eBekuhhKsHapLDPYfX4tGFJrnTRt");
+  const accountIndex = new BN(1);
   const openOrdersIndexer = new PublicKey(
-    "6hA4V9ftEfopqXFEHmoBtJUpFtfZft5HgKncNkJ4ydyN"
+    "3zfApGWevn9t5Bu46WHQm8KNHCd8VwXfzeEmY1ANhEAB"
   );
+
   const tx = await client.createOpenOrders(
     market,
     accountIndex,

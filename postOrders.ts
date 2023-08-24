@@ -13,10 +13,10 @@ async function main() {
   const client = new OpenBookV2Client(programId, provider);
 
   const openOrdersPublicKey = new PublicKey(
-    "GieBM592ZxXW7KX7asyWMi585QtPWLEV8RVCLDc6F8Yx"
+    "EuaUfzypbyh5xtKD2nfHEfpQiTr8QSqu4VeRtLrfTF1c"
   );
   const marketPublicKey = new PublicKey(
-    "6VPvuktraw1AfHcUAtsfTnouUt8Epa1bfbwTRk6PmqWk"
+    "CwHc9CZ9UCZFayz4eBekuhhKsHapLDPYfX4tGFJrnTRt"
   );
   const market = await client.getMarket(marketPublicKey);
   if (!market) {
