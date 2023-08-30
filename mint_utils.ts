@@ -62,8 +62,7 @@ export class MintUtils {
     payer: Keypair,
     owner: PublicKey
   ) {
-    const account = Keypair.generate();
-    return splToken.getOrCreateAssociatedTokenAccount(
+    return await splToken.getOrCreateAssociatedTokenAccount(
       this.conn,
       payer,
       mint,
@@ -72,10 +71,7 @@ export class MintUtils {
     );
   }
 
-  public async mintTo(
-    mint: PublicKey,
-    tokenAccount: PublicKey,
-  ) {
+  public async mintTo(mint: PublicKey, tokenAccount: PublicKey) {
     await splToken.mintTo(
       this.conn,
       this.authority,
