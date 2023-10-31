@@ -1,5 +1,9 @@
 import * as fs from "fs";
-import { OpenBookV2Client, IDL, type OpenbookV2 } from "@openbook-dex/openbook-v2";
+import {
+  OpenBookV2Client,
+  IDL,
+  type OpenbookV2,
+} from "@openbook-dex/openbook-v2";
 
 import {
   Connection,
@@ -19,7 +23,7 @@ export const RPC = "https://api.devnet.solana.com";
 // export const RPC= "https://api.testnet.solana.com";
 
 export const programId = new PublicKey(
-  "opnbkNkqux64GppQhwbyEVc3axhssFhVYuwar8rDHCu"
+  "opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb"
 );
 
 export const authorityFile = `${os.homedir()}/.config/solana/id.json`;

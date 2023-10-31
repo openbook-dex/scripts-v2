@@ -28,7 +28,7 @@ async function main() {
   const provider = new AnchorProvider(new Connection(RPC), wallet, {
     commitment: "confirmed",
   });
-  const client = new OpenBookV2Client(programId, provider);
+  const client = new OpenBookV2Client(provider, programId);
 
   console.log(
     "starting with balance: ",
@@ -41,7 +41,7 @@ async function main() {
   // console.log("Mints created");
   // console.log("Mint 0", mints[0].toString());
   // console.log("Mint 1", mints[1].toString());
-  // await delay(3000);
+  // await delay(300);
   // const baseMint = mints[1];
   // const quoteMint = mints[0];
 

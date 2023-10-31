@@ -2,7 +2,11 @@ import { AnchorProvider, BN, Wallet } from "@coral-xyz/anchor";
 import { PublicKey, Connection } from "@solana/web3.js";
 import { authority } from "./utils";
 import { RPC, programId } from "./utils";
-import { OpenBookV2Client, PlaceOrderArgs, Side } from "@openbook-dex/openbook-v2";
+import {
+  OpenBookV2Client,
+  PlaceOrderArgs,
+  Side,
+} from "@openbook-dex/openbook-v2";
 import { MintUtils } from "./mint_utils";
 
 async function main() {
@@ -82,13 +86,16 @@ async function main() {
       selfTradeBehavior: selfTradeBehavior,
       limit: 255,
     };
+    let remainings = new Array<PublicKey>();
+
     const tx = await client.placeOrder(
       openOrdersPublicKey,
       marketPublicKey,
       market,
       userBaseAcc.address,
       null,
-      args
+      args,
+      remainings
     );
     console.log("Placed order ", tx);
   }
