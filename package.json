@@ -11,12 +11,13 @@
   "license": "ISC",
   "dependencies": {
     "@coral-xyz/anchor": "^0.28.1-beta.1",
+    "@openbook-dex/openbook-v2": "file:../openbook-v2",
     "@solana/spl-token": "^0.3.8",
-    "@solana/web3.js": "^1.78.3",
-    "@openbook-dex/openbook-v2": "file:../openbook-v2"
+    "@solana/web3.js": "^1.78.3"
   },
   "devDependencies": {
     "@types/node": "^20.5.0",
+    "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   }
 }
