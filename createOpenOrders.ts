@@ -15,7 +15,7 @@ async function main() {
   const provider = new AnchorProvider(new Connection(RPC), wallet, {
     commitment: "confirmed",
   });
-  const client = new OpenBookV2Client(programId, provider);
+  const client = new OpenBookV2Client(provider);
 
   const market = new PublicKey("2Hj72s8LRTs532YBDSU7R95DgHw2bSSN5nmwzeYwgJr3");
   const accountIndex = new BN(2);
@@ -24,9 +24,10 @@ async function main() {
   );
 
   const tx = await client.createOpenOrders(
+    wallet.payer,
     market,
     accountIndex,
-    // openOrdersIndexer
+    "name"
   );
   console.log("created open orders acc", tx);
 }

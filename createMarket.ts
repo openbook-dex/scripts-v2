@@ -44,6 +44,7 @@ async function main() {
   // await delay(300);
   // const baseMint = mints[1];
   // const quoteMint = mints[0];
+  
 
   const baseMint = new PublicKey(
     "CEcLT3615yru4tLZfrPSQ9cJmYGtqtXMd25AjfnumPtQ"
@@ -122,17 +123,17 @@ async function main() {
   //   .signers([adminKp])
   //   .rpc();
 
-  const name = "SOL-USDC";
+  const name = "RND-USDC";
 
   const tx = await client.createMarket(
     authority,
     name,
     quoteMint,
     baseMint,
-    new BN(10),
-    new BN(100),
-    new BN(10),
-    new BN(20),
+    new BN(1),
+    new BN(1000000),
+    new BN(0),
+    new BN(0),
     new BN(0),
     oracleAId,
     oracleBId,

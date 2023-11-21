@@ -16,7 +16,7 @@ async function main() {
   const provider = new AnchorProvider(new Connection(RPC), wallet, {
     commitment: "confirmed",
   });
-  const client = new OpenBookV2Client(programId, provider);
+  const client = new OpenBookV2Client(provider);
 
   const marketPublicKey = new PublicKey(
     "2Hj72s8LRTs532YBDSU7R95DgHw2bSSN5nmwzeYwgJr3"
@@ -25,7 +25,7 @@ async function main() {
     "GvVVsRo3LjNw3kz5hhJDgE87s5HMa2xLUhJ3qcyS9x8Q"
   );
 
-  const market = await client.getMarket(marketPublicKey);
+  const market = await client.getMarketAccount(marketPublicKey);
   if (!market) {
     throw "No market";
   }
