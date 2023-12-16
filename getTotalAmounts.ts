@@ -43,14 +43,20 @@ async function main() {
   let totalQuoteBids = 0;
   for (const bid of bids) {
     console.log(
+      "price: ",
       priceData(bid.key),
+      "bid.quantity:",
       bid.quantity.toNumber(),
+      "priceData(bid.key) * bid.quantity.toNumber():",
       priceData(bid.key) * bid.quantity.toNumber()
     );
-    totalQuoteBids += priceData(bid.key) * bid.quantity.toNumber();
+    totalQuoteBids +=
+      priceData(bid.key) *
+      bid.quantity.toNumber() *
+      market.quoteLotSize.toNumber();
   }
 
-  console.log("totalQuoteBids", totalQuoteBids);
+  console.log("totalQuoteBidsNative", totalQuoteBids);
 }
 
 function priceData(key: BN) {
