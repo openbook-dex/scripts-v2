@@ -35,26 +35,35 @@ async function main() {
     await provider.connection.getBalance(authority.publicKey)
   );
 
-  // const nbMints = 2;
-  // let mintUtils = new MintUtils(provider.connection, authority);
-  // let mints = await mintUtils.createMints(nbMints);
-  // console.log("Mints created");
-  // console.log("Mint 0", mints[0].toString());
-  // console.log("Mint 1", mints[1].toString());
-  // await delay(300);
-  // const baseMint = mints[1];
-  // const quoteMint = mints[0];
-  
+  const nbMints = 2;
+  let mintUtils = new MintUtils(provider.connection, authority);
+  let mints = await mintUtils.createMints(nbMints);
+  console.log("Mints created");
+  console.log("Mint 0", mints[0].toString());
+  console.log("Mint 1", mints[1].toString());
+  await delay(300);
+  const baseMint = mints[1];
+  const quoteMint = mints[0];
 
-  const baseMint = new PublicKey(
-    "CEcLT3615yru4tLZfrPSQ9cJmYGtqtXMd25AjfnumPtQ"
-  );
-  const quoteMint = new PublicKey(
-    "FLSJqDK2zGsA9r2qU6mUjJ1xq2eQXW8H2u8W2ekZ1T81"
-  );
+  // In devent
+  // const baseMint = new PublicKey("DEPipWZkmZcr1sL6pVwj8amRjr9kw91UkFR7tvqdvMy2");
+  // const quoteMint = new PublicKey("BfvE9DViu6SkSMBz4TYVftd5DNp7bafemMujXBdVwFYN");
 
-  const oracleAId = null;
-  const oracleBId = null;
+  // // WSOL
+  // const baseMint = new PublicKey("So11111111111111111111111111111111111111112");
+  // // USDC
+  // const quoteMint = new PublicKey(
+  //   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  // );
+
+  // // Sol/USD
+  // const oracleAId = new PublicKey(
+  //   "H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG"
+  // );
+  // // USDC/USD
+  // const oracleBId = new PublicKey(
+  //   "Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD"
+  // );
 
   // let [oracleAId, _tmp1] = PublicKey.findProgramAddressSync(
   //   [
@@ -123,10 +132,10 @@ async function main() {
   //   .signers([adminKp])
   //   .rpc();
 
-  const name = "RND-USDC";
+  const name = "SOL-USDC";
 
-  const tx = await client.createMarket(
-    authority,
+  const [ixs, signers] = await client.createMarketIx(
+    authority.publicKey,
     name,
     quoteMint,
     baseMint,
@@ -135,12 +144,15 @@ async function main() {
     new BN(0),
     new BN(0),
     new BN(0),
-    oracleAId,
-    oracleBId,
+    null,
+    null,
     null,
     null,
     null
   );
+
+  const tx = await client.sendAndConfirmTransaction(ixs, signers);
+
 
   console.log("created market", tx);
   console.log(

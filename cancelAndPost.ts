@@ -1,5 +1,5 @@
 import { AnchorProvider, BN, Wallet } from "@coral-xyz/anchor";
-import { PublicKey, Connection } from "@solana/web3.js";
+import { PublicKey, Connection, Transaction } from "@solana/web3.js";
 import { authority } from "./utils";
 import { RPC, programId } from "./utils";
 import {
@@ -8,6 +8,7 @@ import {
   Side,
   OrderType,
   SelfTradeBehavior,
+  PlaceMultipleOrdersArgs,
 } from "@openbook-dex/openbook-v2";
 import { MintUtils } from "./mint_utils";
 
@@ -19,13 +20,19 @@ async function main() {
   const client = new OpenBookV2Client(provider);
 
   const marketPublicKey = new PublicKey(
-    "2Hj72s8LRTs532YBDSU7R95DgHw2bSSN5nmwzeYwgJr3"
+    "C3YPL3kYCSYKsmHcHrPWx1632GUXGqi2yMXJbfeCc57q"
   );
-  const openOrdersPublicKey = new PublicKey(
-    "GvVVsRo3LjNw3kz5hhJDgE87s5HMa2xLUhJ3qcyS9x8Q"
+  const ooa = await client.findOpenOrdersForMarket(
+    wallet.publicKey,
+    marketPublicKey
   );
 
-  const market = await client.getMarketAccount(marketPublicKey);
+  if (ooa === null || ooa.length < 1) {
+    throw "No ooa";
+  }
+  const openOrdersPublicKey = ooa[0];
+
+  const market = await client.deserializeMarketAccount(marketPublicKey);
   if (!market) {
     throw "No market";
   }
@@ -43,48 +50,38 @@ async function main() {
     authority,
     client.walletPk
   );
-  mintUtils.mintTo(market?.quoteMint, userQuoteAcc.address);
-  mintUtils.mintTo(market?.baseMint, userBaseAcc.address);
 
-  const nbOrders: number = 7;
-  let args: PlaceOrderArgs[] = [];
+  const nbOrders: number = 14;
+  let bids: PlaceMultipleOrdersArgs[] = [];
   for (let i = 0; i < nbOrders; ++i) {
-    args.push({
-      side: Side.Bid,
-      priceLots: new BN(1000 - 1 - i),
-      maxBaseLots: new BN(10),
-      maxQuoteLotsIncludingFees: new BN(1000000),
-      clientOrderId: new BN(i),
-      orderType: OrderType.PostOnly,
+    bids.push({
+      priceLots: new BN(100 - 1 - i),
+      maxQuoteLotsIncludingFees: new BN(1000),
       expiryTimestamp: new BN(0),
-      selfTradeBehavior: SelfTradeBehavior.DecrementTake,
-      limit: 255,
     });
   }
+  let asks: PlaceMultipleOrdersArgs[] = [];
   for (let i = 0; i < nbOrders; ++i) {
-    args.push({
-      side: Side.Ask,
-      priceLots: new BN(1000 + 1 + i),
-      maxBaseLots: new BN(10),
-      maxQuoteLotsIncludingFees: new BN(1000000),
-      clientOrderId: new BN(i),
-      orderType: OrderType.PostOnly,
+    asks.push({
+      priceLots: new BN(100 + 1 + i),
+      maxQuoteLotsIncludingFees: new BN(1000),
       expiryTimestamp: new BN(0),
-      selfTradeBehavior: SelfTradeBehavior.DecrementTake,
-      limit: 255,
     });
   }
 
-  const tx = await client.cancelAndPlaceOrders(
+  const [ix, signers] = await client.cancelAllAndPlaceOrdersIx(
     openOrdersPublicKey,
     marketPublicKey,
     market,
     userBaseAcc.address,
     userQuoteAcc.address,
     null,
-    [],
-    args
+    OrderType.ImmediateOrCancel,
+    bids,
+    asks
   );
+  const tx = await client.sendAndConfirmTransaction([ix], signers);
+
   console.log("Cancel and place order ", tx);
 }
 

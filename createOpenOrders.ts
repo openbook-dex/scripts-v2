@@ -17,8 +17,8 @@ async function main() {
   });
   const client = new OpenBookV2Client(provider);
 
-  const market = new PublicKey("2Hj72s8LRTs532YBDSU7R95DgHw2bSSN5nmwzeYwgJr3");
-  const accountIndex = new BN(2);
+  const market = new PublicKey("C3YPL3kYCSYKsmHcHrPWx1632GUXGqi2yMXJbfeCc57q");
+  const accountIndex = new BN(1);
   const openOrdersIndexer = new PublicKey(
     "3zfApGWevn9t5Bu46WHQm8KNHCd8VwXfzeEmY1ANhEAB"
   );
