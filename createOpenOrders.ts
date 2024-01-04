@@ -23,12 +23,7 @@ async function main() {
     "3zfApGWevn9t5Bu46WHQm8KNHCd8VwXfzeEmY1ANhEAB"
   );
 
-  const tx = await client.createOpenOrders(
-    wallet.payer,
-    market,
-    accountIndex,
-    "name"
-  );
+  const tx = await client.createOpenOrders(wallet.payer, market, "name");
   console.log("created open orders acc", tx);
 }
 main();

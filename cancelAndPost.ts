@@ -80,7 +80,9 @@ async function main() {
     bids,
     asks
   );
-  const tx = await client.sendAndConfirmTransaction([ix], signers);
+  const tx = await client.sendAndConfirmTransaction([ix], {
+    additionalSigners: [signers],
+  });
 
   console.log("Cancel and place order ", tx);
 }

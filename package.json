@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@coral-xyz/anchor": "^0.28.1-beta.1",
-    "@openbook-dex/openbook-v2": "file:../openbook-v2",
+    "@openbook-dex/openbook-v2": "^0.1.5",
     "@solana/spl-token": "^0.3.8",
     "@solana/web3.js": "^1.78.3"
   },

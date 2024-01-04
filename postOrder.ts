@@ -22,7 +22,7 @@ async function main() {
   const marketPublicKey = new PublicKey(
     "CwHc9CZ9UCZFayz4eBekuhhKsHapLDPYfX4tGFJrnTRt"
   );
-  const market = await client.getMarketAccount(marketPublicKey);
+  const market = await client.deserializeMarketAccount(marketPublicKey);
   if (!market) {
     throw "No market";
   }
@@ -59,14 +59,18 @@ async function main() {
       limit: 255,
     };
 
-    const tx = await client.placeOrder(
+    const [ix, signers] = await client.placeOrderIx(
       openOrdersPublicKey,
       marketPublicKey,
       market,
       userQuoteAcc.address,
       null,
-      args
+      args,
+      []
     );
+    const tx = await client.sendAndConfirmTransaction([ix], {
+      additionalSigners: [signers],
+    });
     console.log("Placed order ", tx);
   }
 
@@ -88,7 +92,7 @@ async function main() {
     };
     let remainings = new Array<PublicKey>();
 
-    const tx = await client.placeOrder(
+    const [ix, signers] = await client.placeOrderIx(
       openOrdersPublicKey,
       marketPublicKey,
       market,
@@ -97,6 +101,9 @@ async function main() {
       args,
       remainings
     );
+    const tx = await client.sendAndConfirmTransaction([ix], {
+      additionalSigners: [signers],
+    });
     console.log("Placed order ", tx);
   }
 }

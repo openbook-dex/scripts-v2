@@ -19,12 +19,12 @@ async function main() {
   const marketPublicKey = new PublicKey(
     "BLr5UmvkfoVC4yth5CX2jBT5X75Z61gkLPMbJRNxiRqa"
   );
-  const market = await client.getMarketAccount(marketPublicKey);
+  const market = await client.deserializeMarketAccount(marketPublicKey);
   if (!market) {
     throw "No market";
   }
 
-  const eventHeap = await client.getEventHeap(market.eventHeap);
+  const eventHeap = await client.deserializeEventHeapAccount(market.eventHeap);
   if (!eventHeap) {
     throw "No event heap";
   }
@@ -35,25 +35,31 @@ async function main() {
     if (accounts) {
       console.log("accounts lenght", accounts.length);
 
-      const tx1 = await client.consumeEvents(
+      const ix = await client.consumeEventsIx(
         marketPublicKey,
         market,
         new BN(8),
         accounts
       );
-      console.log("Consumed events ", tx1);
+      const tx = await client.sendAndConfirmTransaction([ix], {
+        additionalSigners: [],
+      });
+      console.log("Consumed events ", tx);
     }
   }
 
   //   //   const tx2= await client.pruneOrders(marketPublicKey, market, openOrdersPublicKey, 5, wallet.payer)
 
-    const tx = await client.closeMarket(
-      marketPublicKey,
-      market,
-      wallet.publicKey,
-      wallet.payer
-    );
-    console.log("Closed market ", tx);
+  const [ix, signers] = await client.closeMarketIx(
+    marketPublicKey,
+    market,
+    wallet.publicKey,
+    wallet.payer
+  );
+  const tx = await client.sendAndConfirmTransaction([ix], {
+    additionalSigners: [signers],
+  });
+  console.log("Closed market ", tx);
 }
 
 main();

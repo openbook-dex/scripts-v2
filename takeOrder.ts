@@ -16,13 +16,13 @@ async function main() {
   const provider = new AnchorProvider(new Connection(RPC), wallet, {
     commitment: "confirmed",
   });
-  const client = new OpenBookV2Client(programId, provider);
+  const client = new OpenBookV2Client(provider);
 
   const marketPublicKey = new PublicKey(
     "2Hj72s8LRTs532YBDSU7R95DgHw2bSSN5nmwzeYwgJr3"
   );
 
-  const market = await client.getMarket(marketPublicKey);
+  const market = await client.deserializeMarketAccount(marketPublicKey);
   if (!market) {
     throw "No market";
   }
@@ -55,16 +55,18 @@ async function main() {
     limit: 255,
   };
   let remainings = new Array<PublicKey>();
-  const tx = await client.placeTakeOrder(
+  const [ix, signers] = await client.placeTakeOrderIx(
     marketPublicKey,
     market,
     userBaseAcc.address,
     userQuoteAcc.address,
     null,
     args,
-    null,
     remainings
   );
+  const tx = await client.sendAndConfirmTransaction([ix], {
+    additionalSigners: [signers],
+  });
   console.log("Take order ", tx);
 }
 

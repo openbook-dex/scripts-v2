@@ -63,8 +63,8 @@ async function main() {
     confFilter: 0.1,
     maxStalenessSlots: 100,
   };
-  const tx = await client.createMarket(
-    authority,
+  const [ixs, signers] = await client.createMarketIx(
+    authority.publicKey,
     name,
     quoteMint,
     baseMint,
@@ -80,7 +80,9 @@ async function main() {
     wallet.publicKey,
     oracleConfigParams
   );
-
+  const tx = await client.sendAndConfirmTransaction(ixs, {
+    additionalSigners: [signers],
+  });
   console.log("created market", tx);
   console.log(
     "finished with balance: ",

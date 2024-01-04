@@ -9,6 +9,8 @@ import {
   Side,
   IDL,
 } from "@openbook-dex/openbook-v2";
+import { toUiDecimals } from "@openbook-dex/openbook-v2";
+import { quoteLotsToUi } from "@openbook-dex/openbook-v2";
 
 async function main() {
   const wallet = new Wallet(authority);
@@ -20,9 +22,9 @@ async function main() {
   const marketPubkey = new PublicKey(
     "C3YPL3kYCSYKsmHcHrPWx1632GUXGqi2yMXJbfeCc57q"
   );
-  const owner = new PublicKey("EaaK2PxkpA7mmtpWYaPYJWPBZ6pnYeiEQpywWcibWjW4");
+  const owner = new PublicKey("J9zjCmmGBfv6wDSwmRW43vVJ6vooCftXjQYtc7uhETdr");
 
-  const market = await client.getMarketAccount(marketPubkey);
+  const market = await client.deserializeMarketAccount(marketPubkey);
 
   if (market === null) {
     throw "No market";
@@ -31,35 +33,14 @@ async function main() {
   let totalQuoteBids = 0;
 
   for (const openOrderPubkey of openorders) {
-    const openOrder = await client.getOpenOrders(openOrderPubkey);
+    const openOrder = await client.deserializeOpenOrderAccount(openOrderPubkey);
 
     if (openOrder) {
-      console.log("bidsBaseLots", openOrder.position.bidsBaseLots.toNumber());
-      console.log("asksBaseLots", openOrder.position.asksBaseLots.toNumber());
-    }
-    const booksideBids = await client.getBookSide(market.bids);
-    if (booksideBids === null) {
-      throw "No booksideBids";
-    }
-    const bids = await client.getLeafNodes(booksideBids);
-
-    for (const bid of bids) {
-      if (openOrderPubkey.toString() !== bid.owner.toString()) {
-        continue;
+      if (openOrder.version != 1){
+        throw "using an old open orders account, please close it"
       }
-      console.log(bid);
-      console.log(
-        "price: ",
-        priceData(bid.key),
-        "bid.quantity:",
-        bid.quantity.toNumber(),
-        "priceData(bid.key) * bid.quantity.toNumber():",
-        priceData(bid.key) * bid.quantity.toNumber()
-      );
-      totalQuoteBids +=
-        priceData(bid.key) *
-        bid.quantity.toNumber() *
-        market.quoteLotSize.toNumber();
+      console.log("bidsQuoteLots", openOrder.position.bidsQuoteLots.toNumber());
+      console.log("asksBaseLots", openOrder.position.asksBaseLots.toNumber());
     }
   }
 
