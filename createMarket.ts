@@ -35,26 +35,27 @@ async function main() {
     await provider.connection.getBalance(authority.publicKey)
   );
 
-  const nbMints = 2;
-  let mintUtils = new MintUtils(provider.connection, authority);
-  let mints = await mintUtils.createMints(nbMints);
-  console.log("Mints created");
-  console.log("Mint 0", mints[0].toString());
-  console.log("Mint 1", mints[1].toString());
-  await delay(300);
-  const baseMint = mints[1];
-  const quoteMint = mints[0];
+  // const nbMints = 2;
+  // let mintUtils = new MintUtils(provider.connection, authority);
+  // let mints = await mintUtils.createMints(nbMints);
+  // console.log("Mints created");
+  // console.log("Mint 0", mints[0].toString());
+  // console.log("Mint 1", mints[1].toString());
+  // await delay(300);
+  // const baseMint = mints[1];
+  // const quoteMint = mints[0];
 
   // In devent
   // const baseMint = new PublicKey("DEPipWZkmZcr1sL6pVwj8amRjr9kw91UkFR7tvqdvMy2");
   // const quoteMint = new PublicKey("BfvE9DViu6SkSMBz4TYVftd5DNp7bafemMujXBdVwFYN");
 
-  // // WSOL
-  // const baseMint = new PublicKey("So11111111111111111111111111111111111111112");
-  // // USDC
-  // const quoteMint = new PublicKey(
-  //   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
-  // );
+  // Mainnet acounts for SOL-USDC
+  // WSOL
+  const baseMint = new PublicKey("METADDFL6wWMWEoKTFJwcThTbUmtarRJZjRpzUvkxhr");
+  // USDC
+  const quoteMint = new PublicKey(
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  );
 
   // // Sol/USD
   // const oracleAId = new PublicKey(
@@ -64,6 +65,8 @@ async function main() {
   // const oracleBId = new PublicKey(
   //   "Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD"
   // );
+  const oracleAId = null;
+  const oracleBId = null;
 
   // let [oracleAId, _tmp1] = PublicKey.findProgramAddressSync(
   //   [
@@ -141,18 +144,19 @@ async function main() {
     baseMint,
     new BN(1),
     new BN(1000000),
+    new BN(1000),
+    new BN(1000),
     new BN(0),
-    new BN(0),
-    new BN(0),
-    null,
-    null,
+    oracleAId,
+    oracleBId,
     null,
     null,
     null
   );
 
-  const tx = await client.sendAndConfirmTransaction(ixs, signers);
-
+  const tx = await client.sendAndConfirmTransaction(ixs, {
+    additionalSigners: signers,
+  });
 
   console.log("created market", tx);
   console.log(
